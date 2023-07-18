@@ -4,9 +4,10 @@ resource "aws_kinesis_firehose_delivery_stream" "covid_data_stream" {
   destination = "extended_s3"
 
   extended_s3_configuration {
-    role_arn   = aws_iam_role.firehose_role.arn
-    bucket_arn = "arn:aws:s3:::thelatestlead"
-    prefix     = "${var.environment}/data/covid_data_stream"
+    role_arn           = aws_iam_role.firehose_role.arn
+    bucket_arn         = "arn:aws:s3:::thelatestlead"
+    prefix             = "${var.environment}/data/covid_data_stream"
+    buffering_interval = 60
   }
 }
 
