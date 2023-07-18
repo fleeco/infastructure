@@ -75,7 +75,7 @@ resource "aws_iam_role" "firehose_role" {
             "kinesis:ListShards"
           ]
           Resource = [
-            aws_kinesis_firehose_delivery_stream.covid_data_stream.arn
+            "arn:aws:firehose:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:deliverystream/production_covid_data_stream"
           ]
         },
       ]
