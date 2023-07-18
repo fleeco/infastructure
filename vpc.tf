@@ -52,7 +52,7 @@ resource "aws_subnet" "tlb-default-pub" {
     vpc_id = aws_vpc.tlb-default.id
     cidr_block = "10.7.1.0/24"
     tags = {
-        Name = "Public SUbnet"
+        Name = "Public Subnet"
     }
 }
 
