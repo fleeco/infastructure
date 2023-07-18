@@ -9,8 +9,9 @@ resource "aws_kinesis_firehose_delivery_stream" "covid_data_stream" {
     prefix          = "${var.environment}/data/covid_data_stream"
     buffer_interval = 60
     cloudwatch_logging_options {
-      enabled        = true
-      log_group_name = "production/covid_data_stream"
+      enabled         = true
+      log_group_name  = "production/covid_data_stream"
+      log_stream_name = "firehose"
     }
   }
 }
