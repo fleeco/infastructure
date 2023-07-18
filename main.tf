@@ -9,7 +9,8 @@ resource "aws_kinesis_firehose_delivery_stream" "covid_data_stream" {
     prefix          = "${var.environment}/data/covid_data_stream"
     buffer_interval = 60
     cloudwatch_logging_options {
-      enabled = true
+      enabled        = true
+      log_group_name = "production/covid_data_stream"
     }
   }
 }
@@ -26,6 +27,8 @@ data "aws_iam_policy_document" "firehose_assume_role" {
     actions = ["sts:AssumeRole"]
   }
 }
+
+
 
 resource "aws_iam_role" "firehose_role" {
   name               = "firehose_test_role"
