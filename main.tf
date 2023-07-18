@@ -74,6 +74,7 @@ resource "aws_iam_role" "firehose_role" {
             "kinesis:GetRecords",
             "kinesis:ListShards"
           ]
+          # This is because I'm dumb.  I'm sure I can attach a role policy after creation but I'm in a hurry :P
           Resource = [
             "arn:aws:firehose:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:deliverystream/production_covid_data_stream"
           ]
