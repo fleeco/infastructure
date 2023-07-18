@@ -43,11 +43,6 @@ resource "aws_route_table" "tlb-pub-route" {
 resource "aws_route_table" "tlb-priv-route" {
   vpc_id = aws_vpc.tlb-default.id
 
-  route {
-    cidr_block = "10.7.0.0/20"
-    gateway_id = aws_internet_gateway.gw.id
-  }
-
   tags = {
     Name = "tlb-private-route-table"
   }
