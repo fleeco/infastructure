@@ -41,6 +41,7 @@ resource "aws_ecs_service" "tlb-redis" {
 
   network_configuration {
     subnets = [ aws_subnet.tlb-default-priv-a.id ]
+    assign_public_ip = true
   }
 
 }
