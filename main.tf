@@ -8,6 +8,9 @@ resource "aws_kinesis_firehose_delivery_stream" "covid_data_stream" {
     bucket_arn      = "arn:aws:s3:::thelatestlead"
     prefix          = "${var.environment}/data/covid_data_stream"
     buffer_interval = 60
+    cloudwatch_logging_options {
+      enabled = true
+    }
   }
 }
 
