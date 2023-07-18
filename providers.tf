@@ -19,6 +19,5 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-west-2"
-  profile = "thelatestlead"
+  region = "us-west-2"
 }
