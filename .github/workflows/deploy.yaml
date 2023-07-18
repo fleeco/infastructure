@@ -1,5 +1,11 @@
 name: Deploy Terraform
 
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
 jobs:
   apply:
     runs-on: ubuntu-latest
