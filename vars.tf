@@ -14,7 +14,7 @@ variable "s3_bucket_arn" {
 
 locals {
   oidc_providers = {
-    "management-us-east-1" : module.management-us-west-2.openid_connect_provider,
+    "management-us-west-2" : module.management-us-west-2.openid_connect_provider,
     # "delivery-us-east-1" : module.delivery-us-east-1.openid_connect_provider,
     # "delivery-us-west-2" : module.delivery-us-west-2.openid_connect_provider
     # "delivery-eu-west-1" : module.delivery-eu-west-1.openid_connect_provider,
