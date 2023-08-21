@@ -86,12 +86,22 @@ resource "aws_subnet" "tlb-default-priv-b" {
 }
 
 
-resource "aws_route_table_association" "pub" {
-  subnet_id      = aws_subnet.tlb-default-pub.id
+resource "aws_route_table_association" "pub-a" {
+  subnet_id      = aws_subnet.tlb-default-pub-a.id
   route_table_id = aws_route_table.tlb-pub-route.id
 }
 
-resource "aws_route_table_association" "priv" {
+resource "aws_route_table_association" "pub-b" {
+  subnet_id      = aws_subnet.tlb-default-pub-b.id
+  route_table_id = aws_route_table.tlb-pub-route.id
+}
+
+resource "aws_route_table_association" "priv-a" {
   subnet_id      = aws_subnet.tlb-default-priv-a.id
+  route_table_id = aws_route_table.tlb-priv-route.id
+}
+
+resource "aws_route_table_association" "priv-b" {
+  subnet_id      = aws_subnet.tlb-default-priv-b.id
   route_table_id = aws_route_table.tlb-priv-route.id
 }
