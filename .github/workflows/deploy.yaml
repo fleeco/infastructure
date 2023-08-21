@@ -24,7 +24,7 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform init
-        run: terraform init
+        run: terraform -chdir=terraform init
 
       - name: Terraform plan
         run: terraform -chdir=terraform plan -no-color -out=plan.out
