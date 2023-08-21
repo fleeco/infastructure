@@ -166,12 +166,12 @@ data "aws_iam_policy_document" "argocd-manager" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(local.oidc_providers.management-us-east-1.url, "https://", "")}:sub"
+      variable = "${replace(local.oidc_providers.management-us-west-2.url, "https://", "")}:sub"
       values   = ["system:serviceaccount:argocd:argocd-application-controller"]
     }
 
     principals {
-      identifiers = [local.oidc_providers.management-us-east-1.arn]
+      identifiers = [local.oidc_providers.management-us-west-2.arn]
       type        = "Federated"
     }
   }
@@ -227,12 +227,12 @@ data "aws_iam_policy_document" "argo-cd-argocd-repo-server" {
 
     condition {
       test     = "StringEquals"
-      variable = "${replace(local.oidc_providers.management-us-east-1.url, "https://", "")}:sub"
+      variable = "${replace(local.oidc_providers.management-us-west-2.url, "https://", "")}:sub"
       values   = ["system:serviceaccount:argo-cd-argocd-repo-server"]
     }
 
     principals {
-      identifiers = [local.oidc_providers.management-us-east-1.arn]
+      identifiers = [local.oidc_providers.management-us-west-2.arn]
       type        = "Federated"
     }
   }
