@@ -55,6 +55,7 @@ resource "aws_route_table" "tlb-priv-route" {
 
 resource "aws_subnet" "tlb-default-pub-b" { 
     vpc_id = aws_vpc.tlb-default.id
+    availablity_zone = "us-west-2a"
     cidr_block = "10.7.1.0/24"
     tags = {
         Name = "Public Subnet"
@@ -63,6 +64,7 @@ resource "aws_subnet" "tlb-default-pub-b" {
 
 resource "aws_subnet" "tlb-default-pub-a" { 
     vpc_id = aws_vpc.tlb-default.id
+    availablity_zone = "us-west-2b"
     cidr_block = "10.7.2.0/24"
     tags = {
         Name = "Public Subnet"
@@ -71,6 +73,7 @@ resource "aws_subnet" "tlb-default-pub-a" {
 
 resource "aws_subnet" "tlb-default-priv-a" { 
     vpc_id = aws_vpc.tlb-default.id
+    availablity_zone = "us-west-2a"
     cidr_block = "10.7.4.0/24"
     tags = {
         Name = "Private Subnet A"
@@ -79,6 +82,7 @@ resource "aws_subnet" "tlb-default-priv-a" {
 
 resource "aws_subnet" "tlb-default-priv-b" { 
     vpc_id = aws_vpc.tlb-default.id
+    availablity_zone = "us-west-2b"
     cidr_block = "10.7.5.0/24"
     tags = {
         Name = "Private Subnet B"
