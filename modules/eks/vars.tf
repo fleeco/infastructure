@@ -30,10 +30,6 @@ variable "iam_ebs_csi_role" {}
 
 variable "iam_karpenter_role" {}
 
-data "aws_ssm_parameter" "private_subnets" {
-  name = "/env/p0/vpc/subnets/private"
-}
+variable "private_subnets" {}
 
-data "aws_ssm_parameter" "vpc_id" {
-  name = "/env/p0/vpc/id"
-}
+variable "public_subnets" {}

@@ -5,7 +5,7 @@ resource "aws_eks_cluster" "this" {
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   vpc_config {
-    subnet_ids = split(",", data.aws_ssm_parameter.private_subnets.value)
+    subnet_ids = var.private_subnets
   }
 
   timeouts {
@@ -19,7 +19,7 @@ resource "aws_eks_node_group" "this" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "${aws_eks_cluster.this.name}-node-group"
   node_role_arn   = var.iam_node_role.arn
-  subnet_ids      = split(",", data.aws_ssm_parameter.private_subnets.value)
+  subnet_ids      = var.private_subnets
   instance_types  = ["c4.large"]
 
   scaling_config {

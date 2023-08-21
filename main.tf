@@ -8,6 +8,8 @@ module "management-us-west-2" {
   iam_node_role      = aws_iam_role.eks_node_role
   iam_karpenter_role = aws_iam_role.karpenter
   iam_ebs_csi_role   = aws_iam_role.ebs_csi
+  public_subnets     = aws_subnet.tlb-default-pub.arn
+  private_subnets    = aws_subnet.tlb-default-priv-a.arn
 }
 
 
