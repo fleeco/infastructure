@@ -8,6 +8,15 @@ variable "s3_bucket_arn" {
   default = "arn:aws:s3:::thelatestlead"
 }
 
+variable "number_of_az" {
+  type = number
+  default = 2
+}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
 # data "aws_ssm_parameter" "github_ssh_key" {
 #   name = "/env/p0/kubekilla/ssh"
 # }

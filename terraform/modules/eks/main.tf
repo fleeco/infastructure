@@ -1,6 +1,6 @@
 resource "aws_eks_cluster" "this" {
   name                      = var.cluster_name
-  version                   = "1.24"
+  version                   = "1.27"
   role_arn                  = var.iam_cluster_role.arn
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
@@ -15,22 +15,65 @@ resource "aws_eks_cluster" "this" {
   }
 }
 
-resource "aws_eks_node_group" "this" {
-  cluster_name    = aws_eks_cluster.this.name
-  node_group_name = "${aws_eks_cluster.this.name}-node-group"
-  node_role_arn   = var.iam_node_role.arn
-  subnet_ids      = var.private_subnets
-  instance_types  = ["c4.large"]
+# resource "aws_eks_node_group" "this" {
+#   cluster_name    = aws_eks_cluster.this.name
+#   node_group_name = "${aws_eks_cluster.this.name}-node-group"
+#   node_role_arn   = var.iam_node_role.arn
+#   subnet_ids      = var.private_subnets
+#   instance_types  = ["c4.large"]
 
-  scaling_config {
-    desired_size = 4
-    max_size     = 5
-    min_size     = 1
-  }
+#   scaling_config {
+#     desired_size = 4
+#     max_size     = 5
+#     min_size     = 1
+#   }
 
-  lifecycle {
-    ignore_changes = [scaling_config[0].desired_size]
+#   lifecycle {
+#     ignore_changes = [scaling_config[0].desired_size]
+#   }
+# }
+
+
+resource "aws_eks_fargate_profile" "system" {
+  cluster_name           = aws_eks_cluster.this.name 
+  fargate_profile_name   = "fargate-system"
+  pod_execution_role_arn = aws_iam_role.fargate.arn
+  subnet_ids             = var.private_subnets
+
+  selector {
+    namespace = "kube-system"
   }
+}
+
+resource "aws_eks_fargate_profile" "default" {
+  cluster_name           = aws_eks_cluster.this.name 
+  fargate_profile_name   = "fargate-default"
+  pod_execution_role_arn = aws_iam_role.fargate.arn
+  subnet_ids             = var.private_subnets
+
+  selector {
+    namespace = "default"
+  }
+}
+
+resource "aws_iam_role" "fargate" {
+  name = "eks-fargate-profile-example"
+
+  assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "eks-fargate-pods.amazonaws.com"
+      }
+    }]
+    Version = "2012-10-17"
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "example-AmazonEKSFargatePodExecutionRolePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSFargatePodExecutionRolePolicy"
+  role       = aws_iam_role.fargate.name
 }
 
 resource "aws_eks_addon" "aws-ebs-csi-driver" {
@@ -38,10 +81,13 @@ resource "aws_eks_addon" "aws-ebs-csi-driver" {
   addon_name               = "aws-ebs-csi-driver"
   service_account_role_arn = var.iam_ebs_csi_role.arn
   timeouts {
-    create = "30m"
+    create = "10m"
     update = "2h"
     delete = "20m"
   }
+  depends_on = [
+    aws_eks_fargate_profile.system
+  ]
 }
 
 
@@ -49,22 +95,31 @@ resource "aws_eks_addon" "coredns" {
   cluster_name = aws_eks_cluster.this.name
   addon_name   = "coredns"
   timeouts {
-    create = "30m"
+    create = "10m"
     update = "2h"
     delete = "20m"
   }
+  depends_on = [
+    aws_eks_fargate_profile.system
+  ]
 }
 
 resource "aws_eks_addon" "kube-proxy" {
   cluster_name = aws_eks_cluster.this.name
   addon_name   = "kube-proxy"
+
+  depends_on = [
+    aws_eks_fargate_profile.system
+  ]
 }
 
 resource "aws_eks_addon" "vpc-cni" {
   cluster_name      = aws_eks_cluster.this.name
-  addon_version     = "v1.12.0-eksbuild.1"
   resolve_conflicts = "OVERWRITE"
   addon_name        = "vpc-cni"
+  depends_on = [
+    aws_eks_fargate_profile.system
+  ]
 }
 
 ## This sets up OIDC authentication
@@ -122,6 +177,7 @@ data:
 YAML
 
   depends_on = [
-    aws_eks_cluster.this
+    aws_eks_cluster.this,
+    aws_eks_fargate_profile.system
   ]
 }
